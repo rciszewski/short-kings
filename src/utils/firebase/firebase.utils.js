@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
   signInWithRedirect, 
-  signInwithPopup, 
+  signInWithPopup, 
   GoogleAuthProvider,
 } from 'firebase/auth'
 
@@ -25,4 +25,4 @@ provider.setCustomParameters({
 })
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInwithPopup(auth, provider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
