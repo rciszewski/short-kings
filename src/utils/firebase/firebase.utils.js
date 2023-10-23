@@ -31,18 +31,25 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
-export const signIn = (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
+export const signInUser = async (email, password) => {
+  try {
+    return await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    // Signed in
+    
+    // ...
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(
+      `'Error in signIn -  Code: ${errorCode} - Message: ${errorMessage}`
+    );
+  }
 };
+
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (

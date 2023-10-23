@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   createAuthUserWithEmailandPassword,
   createUserDocumentFromAuth,
+  signInUser,
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../../ components/form-input/form-input.component";
 import Button from "../button/button.component";
@@ -15,31 +16,17 @@ const defaultFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
-
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // if (password !== confirmPassword) {
-    //   alert("passwords do not match");
 
-    // create user doc from what createAuthUserWithEmailandPassword
-    try {
-      const { user } = await createAuthUserWithEmailandPassword(
-        email,
-        password
-      );
-
-      await createUserDocumentFromAuth(user, {});
-      resetFormFields();
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        alert("The email you entered is already in use.");
-      } else {
-        console.log("line 32 error: ", error);
-      }
-    }
+    const userCredential = await signInUser(email, password);
+    const user = userCredential;
+    console.log(user);
+    // return user;
   };
 
   const handleChange = (event) => {
@@ -76,7 +63,7 @@ const SignInForm = () => {
           <Button type="submit" onClick={handleSubmit}>
             Sign in
           </Button>
-          <Button buttonType={'google'} type="submit" onClick={handleSubmit}>
+          <Button buttonType={"google"} type="submit" onClick={handleSubmit}>
             Sign in with Google
           </Button>
         </div>
