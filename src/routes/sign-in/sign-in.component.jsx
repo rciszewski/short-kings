@@ -14,7 +14,7 @@ const SignIn = () => {
     <div className="sign-up-container">
       <h2>Don't have an account?</h2>
       <span>Sign up with your email and password</span>
-      <button onClick={logGoogleUser}>Google Sign in</button>
+      {/* <button onClick={logGoogleUser}>Google Sign in</button> */}
       <SignUpForm />
     </div>
   );
