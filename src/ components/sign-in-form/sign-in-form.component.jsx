@@ -5,28 +5,25 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../../ components/form-input/form-input.component";
 import Button from "../button/button.component";
-import "./sign-up-form.styles.scss";
+import "./sign-in-form.styles.scss";
 
 const defaultFormFields = {
-  displayName: "",
   email: "",
   password: "",
-  confirmPassword: "",
 };
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { displayName, email, password, confirmPassword } = formFields;
+  const { email, password } = formFields;
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (password !== confirmPassword) {
-      alert("passwords do not match");
-      return;
-    }
+    // if (password !== confirmPassword) {
+    //   alert("passwords do not match");
+
     // create user doc from what createAuthUserWithEmailandPassword
     try {
       const { user } = await createAuthUserWithEmailandPassword(
@@ -34,7 +31,7 @@ const SignUpForm = () => {
         password
       );
 
-      await createUserDocumentFromAuth(user, { displayName });
+      await createUserDocumentFromAuth(user, {});
       resetFormFields();
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
@@ -55,17 +52,8 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="sign-up-container">
+    <div className="sign-in-container">
       <form action="">
-        <FormInput
-          label="Display Name"
-          type="text"
-          required
-          onChange={handleChange}
-          name="displayName"
-          value={displayName}
-        />
-
         <FormInput
           label="Email"
           type="email"
@@ -84,21 +72,17 @@ const SignUpForm = () => {
           value={password}
         />
 
-        <FormInput
-          label="Confirm Password"
-          type="password"
-          required
-          onChange={handleChange}
-          name="confirmPassword"
-          value={confirmPassword}
-        />
-
-        <Button type="submit" onClick={handleSubmit}>
-          Sign up
-        </Button>
+        <div className="signInBtnContainer">
+          <Button type="submit" onClick={handleSubmit}>
+            Sign in
+          </Button>
+          <Button buttonType={'google'} type="submit" onClick={handleSubmit}>
+            Sign in with Google
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default SignUpForm;
+export default SignInForm;
