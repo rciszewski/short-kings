@@ -31,15 +31,13 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
-export const signInUser = async (email, password) => {
+export const SignInUserWithEmailAndPassword = async (email, password) => {
+  console.log(email)
+  if (!email || !password) return;
   try {
-    return await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    return await signInWithEmailAndPassword(auth, email, password);
     // Signed in
-    
+
     // ...
   } catch (error) {
     const errorCode = error.code;

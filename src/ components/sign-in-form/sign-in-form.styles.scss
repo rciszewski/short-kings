@@ -6,12 +6,9 @@
     margin: 10px 0;
   }
 
-  .signInBtnContainer{
+  .signInBtnContainer {
     display: flex;
     justify-content: space-between;
-
-    div {
-      align-items: flex-start;
-    }
+    flex-wrap: wrap;
   }
 }
