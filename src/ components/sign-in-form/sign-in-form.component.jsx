@@ -28,7 +28,7 @@ const SignInForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(!email.length || !password.length) return
+
     try {
       const userCredential = await SignInUserWithEmailAndPassword(
         email,
@@ -38,7 +38,16 @@ const SignInForm = () => {
       console.log(user);
       resetFormFields();
     } catch (error) {
-      console.log(error);
+      switch (error.code) {
+        case "auth/invalid-email":
+          alert("user not found");
+          break;
+        case "auth/invalid-login-credentials":
+          alert("incorrect email or password");
+          break;
+        default:
+          console.log(error);
+      }
     }
   };
 
@@ -78,7 +87,11 @@ const SignInForm = () => {
           <Button type="submit" onClick={handleSubmit}>
             Sign in
           </Button>
-          <Button buttonType={"google"} onClick={signInWithGoogle}>
+          <Button
+            type="button"
+            buttonType={"google"}
+            onClick={signInWithGoogle}
+          >
             Sign in with Google
           </Button>
         </div>
