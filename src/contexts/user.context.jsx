@@ -20,7 +20,6 @@ export const UserProvider = ({ children }) => {
         createUserDocumentFromAuth(user); //function checks if snapshot of user doc exists or not
       }
       setCurrentUser(user);
-      console.log(user);
     });
 
     return unsubscribe;

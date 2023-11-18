@@ -1,16 +1,22 @@
 import "./cart-dropdown.styles.scss";
 import Button from "../button/button.component";
+import CartItem from "../cart-item/cart-item.component";
 import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 
 const CartDropDown = () => {
   const { cartItems } = useContext(CartContext);
+
   return (
     <div className="cart-dropdown-container">
       <div className="cart-items">
-        {cartItems.map((item, idx) => {
-          return <img key={idx} src={item.imageUrl} alt={item.name} />;
-        })}
+        {cartItems.length ? (
+          cartItems.map((cartItem) => (
+            <CartItem key={cartItem.id} cartItem={cartItem} />
+          ))
+        ) : (
+          <span className="empty-message">Your cart is empty</span>
+        )}
       </div>
       <Button>Go to Cart</Button>
     </div>
