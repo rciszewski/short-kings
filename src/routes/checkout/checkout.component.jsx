@@ -3,8 +3,9 @@ import { CartContext } from "../../contexts/cart.context";
 import "./checkout.styles.scss";
 
 const Checkout = () => {
-  const { cartItems, setIsCartOpen } = useContext(CartContext);
-
+  const { cartItems, setIsCartOpen, updateItemQuantity, removeItemFromCart } =
+    useContext(CartContext);
+  console.log(cartItems);
   useEffect(() => {
     setIsCartOpen(false);
   }, []);
@@ -25,9 +26,33 @@ const Checkout = () => {
           <div key={id} className="checkout-item">
             <img src={imageUrl} alt={name} />
             <span>{name}</span>
-            <span>{quantity}</span>
+            <span>
+              <span
+                onClick={() => {
+                  updateItemQuantity("decrease", cartItem);
+                }}
+              >
+                {" "}
+                {`<`}{" "}
+              </span>
+              <span>{quantity}</span>
+              <span
+                onClick={() => {
+                  updateItemQuantity("increase", cartItem);
+                }}
+              >
+                {" "}
+                {`>`}{" "}
+              </span>
+            </span>
             <span>{price}</span>
-            <span>X</span>
+            <span
+              onClick={() => {
+                removeItemFromCart(cartItem);
+              }}
+            >
+              X
+            </span>
           </div>
         );
       })}
