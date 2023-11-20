@@ -1,61 +1,37 @@
 import { useContext, useEffect } from "react";
 import { CartContext } from "../../contexts/cart.context";
+import CheckoutItem from "../../ components/checkout-item/checkout-item.component";
 import "./checkout.styles.scss";
 
 const Checkout = () => {
-  const { cartItems, setIsCartOpen, updateItemQuantity, removeItemFromCart } =
-    useContext(CartContext);
-  console.log(cartItems);
+  const { cartItems, setIsCartOpen, totalCartPrice } = useContext(CartContext);
   useEffect(() => {
     setIsCartOpen(false);
   }, []);
 
   return (
     <div className="checkout-container">
-      <h1>Checkout</h1>
       <div className="checkout-header">
-        <span>Product</span>
-        <span>Description</span>
-        <span>Quantity</span>
-        <span>Price</span>
-        <span>Remove</span>
+        <div className="header-block">
+          <span>Product</span>
+        </div>
+        <div className="header-block">
+          <span>Description</span>
+        </div>
+        <div className="header-block">
+          <span>Quantity</span>
+        </div>
+        <div className="header-block">
+          <span>Price</span>
+        </div>
+        <div className="header-block">
+          <span>Remove</span>
+        </div>
       </div>
-      {cartItems.map((cartItem) => {
-        const { id, imageUrl, name, quantity, price } = cartItem;
-        return (
-          <div key={id} className="checkout-item">
-            <img src={imageUrl} alt={name} />
-            <span>{name}</span>
-            <span>
-              <span
-                onClick={() => {
-                  updateItemQuantity("decrease", cartItem);
-                }}
-              >
-                {" "}
-                {`<`}{" "}
-              </span>
-              <span>{quantity}</span>
-              <span
-                onClick={() => {
-                  updateItemQuantity("increase", cartItem);
-                }}
-              >
-                {" "}
-                {`>`}{" "}
-              </span>
-            </span>
-            <span>{price}</span>
-            <span
-              onClick={() => {
-                removeItemFromCart(cartItem);
-              }}
-            >
-              X
-            </span>
-          </div>
-        );
-      })}
+      {cartItems.map((cartItem) => (
+        <CheckoutItem key={cartItem.id} cartItem={cartItem} />
+      ))}
+      <span className="total">Total: ${totalCartPrice}</span>
     </div>
   );
 };

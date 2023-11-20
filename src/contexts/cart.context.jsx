@@ -1,11 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 
-export const addCartItem = (
-  cartItems,
-  productToAdd,
-  cartCount,
-  setCartCount
-) => {
+const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === productToAdd.id
   );
@@ -21,6 +16,15 @@ export const addCartItem = (
   return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
 
+const removeCartItem = (cartItems, productToRemove) => {
+  if (productToRemove.quantity === 1) {
+    const updatedCartItems = cartItems.filter((cartItem) => {
+      return cartItem.id !== productToRemove.id;
+    });
+    return updatedCartItems;
+  }
+};
+
 // as the actual value you want to access
 export const CartContext = createContext({
   isCartOpen: false,
@@ -30,12 +34,14 @@ export const CartContext = createContext({
   addItemToCart: () => {},
   updateItemQuantity: () => {},
   removeItemFromCart: () => {},
+  totalCartPrice: 0,
 });
 
 export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [totalCartPrice, setTotalCartPrice] = useState(0);
 
   useEffect(() => {
     const newCartCount = cartItems.reduce((total, cartItem) => {
@@ -44,17 +50,30 @@ export const CartProvider = ({ children }) => {
     setCartCount(newCartCount);
   }, [cartItems]);
 
-  const addItemToCart = (product) =>
-    setCartItems(addCartItem(cartItems, product, cartCount, setCartCount));
+  useEffect(() => {
+    const newTotalCartPrice = cartItems.reduce((totalPrice, cartItem) => {
+      return totalPrice + cartItem.quantity * cartItem.price;
+    }, 0);
+    setTotalCartPrice(newTotalCartPrice);
+  }, [cartItems]);
+
+  const addItemToCart = (product) => {
+    setCartItems(addCartItem(cartItems, product));
+  };
 
   const updateItemQuantity = (quantityOperation, cartItemToUpdate) => {
     if (quantityOperation === "decrease") {
-      const updatedCartItems = cartItems.map((cartItem) =>
-        cartItem.id === cartItemToUpdate.id
-          ? { ...cartItem, quantity: cartItem.quantity - 1 }
-          : cartItem
-      );
-      setCartItems(updatedCartItems);
+      if (cartItemToUpdate.quantity > 1) {
+        const updatedCartItems = cartItems.map((cartItem) =>
+          cartItem.id === cartItemToUpdate.id
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        );
+        setCartItems(updatedCartItems);
+      } else {
+        const updatedCartItems = removeCartItem(cartItems, cartItemToUpdate);
+        setCartItems(updatedCartItems);
+      }
     } else {
       const updatedCartItems = cartItems.map((cartItem) =>
         cartItem.id === cartItemToUpdate.id
@@ -80,6 +99,7 @@ export const CartProvider = ({ children }) => {
     cartCount,
     updateItemQuantity,
     removeItemFromCart,
+    totalCartPrice,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
