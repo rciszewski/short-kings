@@ -10,15 +10,15 @@ const CartDropDown = () => {
   const navTo = useNavigate();
   return (
     <div className="cart-dropdown-container">
-      <div className="cart-items">
-        {cartItems.length ? (
-          cartItems.map((cartItem) => (
+      {cartItems.length ? (
+        <div className="cart-items">
+          {cartItems?.map((cartItem) => (
             <CartItem key={cartItem.id} cartItem={cartItem} />
-          ))
-        ) : (
-          <span className="empty-message">Your cart is empty</span>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <span className="empty-message">Your cart is empty</span>
+      )}
       <Button onClick={() => navTo("/checkout")}>Go to Cart</Button>
     </div>
   );
