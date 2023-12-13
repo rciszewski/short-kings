@@ -10,7 +10,7 @@ import {
   RemoveBtnDiv,
 } from "./checkout-item.styles.jsx";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 
 const CheckoutItem = ({ cartItem }) => {

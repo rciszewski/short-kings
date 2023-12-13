@@ -4,8 +4,11 @@ import CartItem from "../cart-item/cart-item.component";
 import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 
-import { CartDropdown, CartItemDropDown, EmptyMessage} from "./cart-dropdown.styles.jsx";
-
+import {
+  CartDropdown,
+  CartItems,
+  EmptyMessage,
+} from "./cart-dropdown.styles.jsx";
 
 const CartDropDown = () => {
   const { cartItems } = useContext(CartContext);
@@ -13,11 +16,11 @@ const CartDropDown = () => {
   return (
     <CartDropdown>
       {cartItems.length ? (
-        <CartItemDropDown>
+        <CartItems>
           {cartItems?.map((cartItem) => (
             <CartItem key={cartItem.id} cartItem={cartItem} />
           ))}
-        </CartItemDropDown>
+        </CartItems>
       ) : (
         <EmptyMessage>Your cart is empty</EmptyMessage>
       )}
