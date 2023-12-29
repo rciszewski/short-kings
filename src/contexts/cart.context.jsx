@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
@@ -37,6 +37,11 @@ export const CartContext = createContext({
   totalCartPrice: 0,
 });
 
+const CART_ACTION_TYPES = {
+  SET_CART_ITEMS: "SET_CART_ITEMS",
+  TOGGLE_CART_OPEN: "TOGGLE_CART_OPEN",
+};
+
 const INITIAL_STATE = {
   isCartOpen: false,
   cartItems: [],
@@ -48,69 +53,83 @@ const cartReducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case "SET_CART_ITEMS":
+    case CART_ACTION_TYPES.SET_CART_ITEMS:
       return {
         ...state,
         ...payload,
       };
-
+    case CART_ACTION_TYPES.TOGGLE_CART_OPEN:
+      return {
+        ...state,
+        ...payload,
+      };
     default:
-      throw new Error(`unhandled type of ${type} in cartReducer`);
+      throw new Error(`unhandled type: ${type} in cartReducer`);
   }
 };
 
 export const CartProvider = ({ children }) => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [cartCount, setCartCount] = useState(0);
-  const [totalCartPrice, setTotalCartPrice] = useState(0);
+  const [{ cartItems, isCartOpen, cartCount, totalCartPrice }, dispatch] =
+    useReducer(cartReducer, INITIAL_STATE);
 
-  useEffect(() => {
-    const newCartCount = cartItems.reduce((total, cartItem) => {
+  const updateCartItemsReducer = (newCartItems) => {
+    const newCartCount = newCartItems.reduce((total, cartItem) => {
       return total + cartItem.quantity;
     }, 0);
-    setCartCount(newCartCount);
-  }, [cartItems]);
-
-  useEffect(() => {
-    const newTotalCartPrice = cartItems.reduce((totalPrice, cartItem) => {
+    const newTotalCartPrice = newCartItems.reduce((totalPrice, cartItem) => {
       return totalPrice + cartItem.quantity * cartItem.price;
     }, 0);
-    setTotalCartPrice(newTotalCartPrice);
-  }, [cartItems]);
+
+    dispatch({
+      type: CART_ACTION_TYPES.SET_CART_ITEMS,
+      payload: {
+        cartItems: newCartItems,
+        cartCount: newCartCount,
+        totalCartPrice: newTotalCartPrice,
+      },
+    });
+  };
+
+  const setIsCartOpen = (bool) => {
+    dispatch({
+      type: CART_ACTION_TYPES.TOGGLE_CART_OPEN,
+      payload: { isCartOpen: bool },
+    });
+  };
 
   const addItemToCart = (product) => {
-    setCartItems(addCartItem(cartItems, product));
+    const newCartItems = addCartItem(cartItems, product);
+    updateCartItemsReducer(newCartItems);
   };
 
   const updateItemQuantity = (quantityOperation, cartItemToUpdate) => {
     if (quantityOperation === "decrease") {
       if (cartItemToUpdate.quantity > 1) {
-        const updatedCartItems = cartItems.map((cartItem) =>
+        const newCartItems = cartItems.map((cartItem) =>
           cartItem.id === cartItemToUpdate.id
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         );
-        setCartItems(updatedCartItems);
+        updateCartItemsReducer(newCartItems);
       } else {
-        const updatedCartItems = removeCartItem(cartItems, cartItemToUpdate);
-        setCartItems(updatedCartItems);
+        const newCartItems = removeCartItem(cartItems, cartItemToUpdate);
+        updateCartItemsReducer(newCartItems);
       }
     } else {
-      const updatedCartItems = cartItems.map((cartItem) =>
+      const newCartItems = cartItems.map((cartItem) =>
         cartItem.id === cartItemToUpdate.id
           ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem
       );
-      setCartItems(updatedCartItems);
+      updateCartItemsReducer(newCartItems);
     }
   };
 
   const removeItemFromCart = (cartItemToRemove) => {
-    const updatedCart = cartItems.filter((cartItem) => {
+    const newCartItems = cartItems.filter((cartItem) => {
       return cartItem.id !== cartItemToRemove.id;
     });
-    setCartItems(updatedCart);
+    updateCartItemsReducer(newCartItems);
   };
 
   const value = {
