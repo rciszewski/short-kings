@@ -1,5 +1,7 @@
 import { createContext, useReducer } from "react";
 
+import { createAction } from "../utils/reducer/reducer.utils";
+
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
     (cartItem) => cartItem.id === productToAdd.id
@@ -61,7 +63,7 @@ const cartReducer = (state, action) => {
     case CART_ACTION_TYPES.TOGGLE_CART_OPEN:
       return {
         ...state,
-        ...payload,
+        isCartOpen: payload,
       };
     default:
       throw new Error(`unhandled type: ${type} in cartReducer`);
@@ -80,21 +82,18 @@ export const CartProvider = ({ children }) => {
       return totalPrice + cartItem.quantity * cartItem.price;
     }, 0);
 
-    dispatch({
-      type: CART_ACTION_TYPES.SET_CART_ITEMS,
-      payload: {
+    dispatch(
+      createAction(CART_ACTION_TYPES.SET_CART_ITEMS, {
         cartItems: newCartItems,
         cartCount: newCartCount,
         totalCartPrice: newTotalCartPrice,
-      },
-    });
+      })
+    );
   };
 
   const setIsCartOpen = (bool) => {
-    dispatch({
-      type: CART_ACTION_TYPES.TOGGLE_CART_OPEN,
-      payload: { isCartOpen: bool },
-    });
+    console.log(bool);
+    dispatch(createAction(CART_ACTION_TYPES.TOGGLE_CART_OPEN, bool));
   };
 
   const addItemToCart = (product) => {
