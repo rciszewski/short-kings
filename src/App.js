@@ -11,6 +11,8 @@ import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { setCurrentUser } from "./store/user/user.action";
+import { setCategoriesMap } from "../src/store/categories/category.action.js";
+import { getCategoriesAndDocuments } from "../src/utils/firebase/firebase.utils.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,15 @@ const App = () => {
     });
 
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const getCategoriesMap = async () => {
+      const categoryMap = await getCategoriesAndDocuments();
+      dispatch(setCategoriesMap(categoryMap));
+      console.log(categoryMap) 
+    };
+    getCategoriesMap();
   }, []);
   return (
     <Routes>
