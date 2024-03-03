@@ -1,12 +1,20 @@
-import { useContext, useEffect } from "react";
-import { CartContext } from "../../contexts/cart.context";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CheckoutItem from "../../ components/checkout-item/checkout-item.component";
 import "./checkout.styles.scss";
+import {
+  selectCartItems,
+  selectTotalCartPrice,
+} from "../../store/cart/cart.selector";
+import { setIsCartOpen } from "../../store/cart/cart.action";
 
 const Checkout = () => {
-  const { cartItems, setIsCartOpen, totalCartPrice } = useContext(CartContext);
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const totalCartPrice = useSelector(selectTotalCartPrice);
   useEffect(() => {
-    setIsCartOpen(false);
+    dispatch(setIsCartOpen(false));
   }, []);
 
   return (
