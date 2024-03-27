@@ -45,7 +45,7 @@ export const signInWithGooglePopup = () =>
 export const SignInUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   try {
-    return await signInWithEmailAndPassword(auth, email, password);
+    return await  (auth, email, password);
     // Signed in
 
     // ...
