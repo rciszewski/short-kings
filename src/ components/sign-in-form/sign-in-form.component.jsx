@@ -6,6 +6,8 @@ import {
 import FormInput from "../../ components/form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { SignInContainer, SignInBtnContainer } from "./sign-in-form.styles";
+import { useDispatch } from "react-redux";
+import { googleSignInStart } from "../../store/user/user.action";
 
 const defaultFormFields = {
   email: "",
@@ -19,8 +21,10 @@ const SignInForm = () => {
     setFormFields(defaultFormFields);
   };
 
+  const dispatch = useDispatch();
+
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    dispatch(googleSignInStart());
   };
 
   const handleSubmit = async (event) => {
