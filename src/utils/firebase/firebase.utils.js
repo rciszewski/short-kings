@@ -45,7 +45,7 @@ export const signInWithGooglePopup = () =>
 export const SignInUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   try {
-    return await  (auth, email, password);
+    return await (auth, email, password);
     // Signed in
 
     // ...
@@ -83,7 +83,6 @@ export const getCategoriesAndDocuments = async () => {
 
   const querySnapshop = await getDocs(q);
   return querySnapshop.docs.map((docSnapshot) => docSnapshot.data());
-
 };
 
 export const createUserDocumentFromAuth = async (
@@ -95,7 +94,7 @@ export const createUserDocumentFromAuth = async (
   const userDocRef = doc(db, "users", userAuth.uid);
 
   const userSnapshot = await getDoc(userDocRef);
-
+  
   // Check to see if snapshop exists
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth;
@@ -113,7 +112,7 @@ export const createUserDocumentFromAuth = async (
     }
   }
 
-  return userDocRef;
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailandPassword = async (email, password) => {
@@ -126,3 +125,16 @@ export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
