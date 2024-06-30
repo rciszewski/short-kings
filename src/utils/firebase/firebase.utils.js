@@ -45,7 +45,7 @@ export const signInWithGooglePopup = () =>
 export const SignInUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   try {
-    return await (auth, email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
     // Signed in
 
     // ...
@@ -94,7 +94,7 @@ export const createUserDocumentFromAuth = async (
   const userDocRef = doc(db, "users", userAuth.uid);
 
   const userSnapshot = await getDoc(userDocRef);
-  
+
   // Check to see if snapshop exists
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth;

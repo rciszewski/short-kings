@@ -8,6 +8,7 @@ import CartDropDown from "../../ components/cart-dropdown/cart-dropdown.componen
 import { selectIsCartOpen } from "../../store/cart/cart.selector";
 import { setIsCartOpen } from "../../store/cart/cart.action";
 import { useDispatch } from "react-redux";
+import { signOutStart } from "../../store/user/user.action";
 import {
   NavigationContainer,
   LogoContainer,
@@ -22,6 +23,7 @@ const Navigation = () => {
   const toggleShoppingCartOpen = () => {
     dispatch(setIsCartOpen(!isCartOpen));
   };
+  const signOutUser = () => dispatch(signOutStart());
   return (
     <>
       <NavigationContainer>
